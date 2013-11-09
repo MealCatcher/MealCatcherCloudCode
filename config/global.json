@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "MealCatcher": {
+            "applicationId": "2Yjd5bZO0eeYwpSoB6eor8vfEaN4H61NSlU1Ho8b", 
+            "masterKey": "jn2VFryrzoavkmsGhPbo9sbKDFjAlxh2K8imdCRu"
+        }, 
+        "_default": {
+            "link": "MealCatcher"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.12"
+    }
+}
