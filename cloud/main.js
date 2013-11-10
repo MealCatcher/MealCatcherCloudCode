@@ -7,40 +7,23 @@ require('cloud/app.js')
 console.log("I am going to start testing");
 
 Parse.Cloud.define("hello", function(request, response){
-  
- console.log("I am going to start testing 1.0");
-
-  Parse.Push.send({
-	//channels: ["TestRecommendations"],
-	where: new Parse.Query(Parse.Installation),
-	data: 
-	{
-		alert: "This is a new recommendation from cloud code!"
-	}
-	}, 
-	{
-	success: function() {
-		//Push was 
-		console.log("Push was successfull");
-	},
-	error: function(error) {
-	//Handle error
-	console.error("Got an error " + error.code + " : " + error.message);
-		}
-	});
-
-	response.success("Hello Jorge cloud!");
+	response.success("Hello World");
 });
 
 Parse.Cloud.afterSave("Recommendation", function(request){
 	query = new Parse.Query("Recommendation");
 	if(query)
 	{
-		console.log("the query exists");
 		console.log(request);
+		console.log(request.user);
+		var recommender = request.user;
+		var recommenderName = request.user.get("name");
+		console.log("Recommnder Name: " + recommenderName);
+		//console.log(request.get("user"));
 		console.log(request.object);
-		console.log(request.object.id);
-		console.log(request.object.get("restaurant"));
+		console.log("Request Object ID: " + request.object.id);
+		console.log("Request Object restaurant: " + request.object.get("restaurant"));
+		console.log("User: " + request.object.get("user"));
 		console.log(request.object.get("parent"));
 		console.log(request.object.get("parent").objectId);
 		var parentTest = request.object.get("parent");
@@ -60,10 +43,13 @@ Parse.Cloud.afterSave("Recommendation", function(request){
 					var pushQuery = new Parse.Query(Parse.Installation);
 					pushQuery.matchesQuery('owner', userQuery);
 
+					var shareMessage = recommenderName + " recommends " + request.object.get("restaurant");
+
 					Parse.Push.send({
 						where: pushQuery, 
 						data: {
-							alert: "Free hotdog!"
+							//alert: "Free hotdog!"
+							alert: shareMessage
 						}
 					}, {
 						success: function() {
