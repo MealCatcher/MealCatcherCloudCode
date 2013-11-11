@@ -1,10 +1,7 @@
 
 // Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
 
 require('cloud/app.js')
-
-console.log("I am going to start testing");
 
 Parse.Cloud.define("hello", function(request, response){
 	response.success("Hello World");
@@ -14,28 +11,15 @@ Parse.Cloud.afterSave("Recommendation", function(request){
 	query = new Parse.Query("Recommendation");
 	if(query)
 	{
-		console.log(request);
-		console.log(request.user);
-		var recommender = request.user;
+		//console.log(request);
+
 		var recommenderName = request.user.get("name");
-		console.log("Recommnder Name: " + recommenderName);
-		//console.log(request.get("user"));
-		console.log(request.object);
-		console.log("Request Object ID: " + request.object.id);
-		console.log("Request Object restaurant: " + request.object.get("restaurant"));
-		console.log("User: " + request.object.get("user"));
-		console.log(request.object.get("parent"));
-		console.log(request.object.get("parent").objectId);
 		var parentTest = request.object.get("parent");
-		console.log("Parent Test: " + parentTest);
-		console.log("Object Id 1: " + parentTest["objectId"]);
-		console.log("Object Id 2:" + parentTest.objectId);
-		console.log("Object Id 3:" + parentTest.id);
 
 		var userQuery = new Parse.Query(Parse.User);
+
 		if(userQuery)
 		{
-			console.log("user query is not null");
 			userQuery.get(parentTest.id, {
 				success: function(user) {
 					console.log("got the user successfully");
@@ -48,51 +32,31 @@ Parse.Cloud.afterSave("Recommendation", function(request){
 					Parse.Push.send({
 						where: pushQuery, 
 						data: {
-							//alert: "Free hotdog!"
 							alert: shareMessage
 						}
 					}, {
 						success: function() {
-							console.log("the push was successfull");
+							console.log("The push was successfull.");
 						}, 
 						error: function(error) {
-							console.error("the push was not successfull");
+							console.error("The push was not successfull");
 						}
 					});
 				},
 				error: function(error) {
-					console.error("Got an error");
+					console.error("Error: " + error.message + " " + error.code);
 				}
 			});
 		}
 		else
 		{
-			console.log("user query is null");
+			console.log("The query did not work. It's null.");
 		}
-		/*userQuery.get(parentTest.id, success: function(user) {
-				//object was retrieved successfully
-				console.log("The user was retrieved successfully");
-			}, 
-			error: function(object, error) {
-				//The object was not retrieved successfullu
-				console.error("The object was not retrieved successfully");
-			}
-		});*/
-
 	}
 	else
 	{
-		console.log("the query is null");
+		console.log("The query did not work. It's null.");
 	}
-	/*query.get(request.object.get("recommendation").restaurant, {
-		success: function(post) {
-			console.log("I am going to start testing 1.1");
-		},
-		error: function(error){
-			//handle error
-			console.log("I am going to start testing 1.2");
-		}
-	})*/
 });
 
 
